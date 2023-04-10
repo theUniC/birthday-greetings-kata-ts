@@ -4,19 +4,18 @@ import { XDate } from '../src/XDate';
 import * as nodemailer from 'nodemailer';
 import { Transport } from 'nodemailer';
 import MailMessage from 'nodemailer/lib/mailer/mail-message';
-import { CsvEmployeeRepository } from '../src/CsvEmployeeRepository';
 import { BirthdayGreetingMessage } from '../src/BirthdayGreetingMessage';
 import { NodemailerBirthdayGreetSender } from '../src/NodemailerBirthdayGreetSender';
+import { InMemoryEmployeeRepository } from '../src/InMemoryEmployeeRepository';
+import { Employee } from '../src/Employee';
 
 class TestableBirthdayService extends BirthdayService {
   constructor(private transport: Transport) {
-    const { pathname: root } = new URL(
-      '../resources/employee_data.txt',
-      import.meta.url,
-    );
-
     super(
-      new CsvEmployeeRepository(root),
+      new InMemoryEmployeeRepository([
+        new Employee('John', 'Doe', '1982/10/08', 'john.doe@foobar.com'),
+        new Employee('Mary', 'Ann', '1975/03/11', 'mary.ann@foobar.com'),
+      ]),
       new NodemailerBirthdayGreetSender(nodemailer.createTransport(transport)),
     );
   }
