@@ -1,5 +1,5 @@
 {
-  "name": "typescript-starter",
+  "name": "birthday-greetings-kata-ts",
   "version": "0.0.0",
   "description": "Minimalistic boilerplate to quick-start Node.js development in TypeScript.",
   "type": "module",
@@ -10,6 +10,7 @@
     "@jest/globals": "^29.5.0",
     "@types/jest": "~29.2.6",
     "@types/node": "~18.15.11",
+    "@types/nodemailer": "^6.4.7",
     "@typescript-eslint/eslint-plugin": "~5.44.0",
     "@typescript-eslint/parser": "~5.44.0",
     "eslint": "~8.28.0",
@@ -30,11 +31,14 @@
     "build:watch": "tsc -w -p tsconfig.json",
     "build:release": "npm run clean && tsc -p tsconfig.release.json",
     "lint": "eslint . --ext .ts --ext .mts",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --silent=false",
+    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "prettier": "prettier --config .prettierrc --write .",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
   },
   "dependencies": {
+    "csv": "^6.2.8",
+    "nodemailer": "^6.9.1",
     "tslib": "~2.4.1"
   },
   "volta": {
