@@ -11,9 +11,13 @@ export class BirthdayService {
 
   async sendGreetings(xDate: XDate): Promise<void> {
     const employees = this.employeeRepository.employeesWhoseBirthdayIs(xDate);
+    const messages = [];
 
     for (const employee of employees) {
-      const message = BirthdayGreetingMessage.to(employee);
+      messages.push(BirthdayGreetingMessage.to(employee));
+    }
+
+    for (const message of messages) {
       await this.birthdayGreetSender.send(message);
     }
   }
