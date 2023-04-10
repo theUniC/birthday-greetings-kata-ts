@@ -1,20 +1,16 @@
 import { XDate } from './XDate';
 import * as nodemailer from 'nodemailer';
-import { CsvEmployeeRepository } from './CsvEmployeeRepository';
+import { EmployeeRepository } from './EmployeeRepository';
 
 export class BirthdayService {
-  constructor(private employeeRepository: CsvEmployeeRepository) {}
+  constructor(private employeeRepository: EmployeeRepository) {}
 
   async sendGreetings(
-    fileName: string,
     xDate: XDate,
     smtpHost: string,
     smtpPort: number,
   ): Promise<void> {
-    const employees = this.employeeRepository.employeesWhoseBirthdayIs(
-      fileName,
-      xDate,
-    );
+    const employees = this.employeeRepository.employeesWhoseBirthdayIs(xDate);
 
     for (const employee of employees) {
       const recipient = employee.getEmail();

@@ -1,14 +1,19 @@
-import { BirthdayService } from '../src/BirthdayService.js';
+import { BirthdayService } from '../src/BirthdayService';
 import { beforeEach, expect, it } from '@jest/globals';
-import { XDate } from '../src/XDate.js';
+import { XDate } from '../src/XDate';
 import * as nodemailer from 'nodemailer';
 import { Transport } from 'nodemailer';
-import MailMessage from 'nodemailer/lib/mailer/mail-message.js';
+import MailMessage from 'nodemailer/lib/mailer/mail-message';
 import { CsvEmployeeRepository } from '../src/CsvEmployeeRepository';
 
 class TestableBirthdayService extends BirthdayService {
   constructor(private transport: Transport) {
-    super(new CsvEmployeeRepository());
+    const { pathname: root } = new URL(
+      '../resources/employee_data.txt',
+      import.meta.url,
+    );
+
+    super(new CsvEmployeeRepository(root));
   }
 
   protected async sendMessage(
@@ -50,7 +55,6 @@ describe('BirthdayService', () => {
 
   it("will send greetings when it's somebody's birthday", async () => {
     await birthdayService.sendGreetings(
-      'employee_data.txt',
       new XDate('2008/10/08'),
       'localhost',
       NONSTANDARD_PORT,
@@ -66,7 +70,6 @@ describe('BirthdayService', () => {
 
   it("will not send email when nobody's birthday", async () => {
     await birthdayService.sendGreetings(
-      'employee_data.txt',
       new XDate('2008/01/01'),
       'localhost',
       NONSTANDARD_PORT,

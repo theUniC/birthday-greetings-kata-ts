@@ -2,15 +2,13 @@ import { XDate } from './XDate';
 import { Employee } from './Employee';
 import fs from 'fs';
 import { parse } from 'csv/sync';
+import { EmployeeRepository } from './EmployeeRepository';
 
-export class CsvEmployeeRepository {
-  employeesWhoseBirthdayIs(fileName: string, xDate: XDate): Employee[] {
-    const { pathname: root } = new URL(
-      `../resources/${fileName}`,
-      import.meta.url,
-    );
+export class CsvEmployeeRepository implements EmployeeRepository {
+  constructor(private fileName: string = null) {}
 
-    const data = fs.readFileSync(root);
+  employeesWhoseBirthdayIs(xDate: XDate): Employee[] {
+    const data = fs.readFileSync(this.fileName);
 
     const lines = parse(data, {
       delimiter: ',',
