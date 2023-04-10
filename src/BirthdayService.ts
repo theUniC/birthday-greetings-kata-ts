@@ -23,6 +23,8 @@ export class BirthdayService {
       fromLine: 2,
     }) as string[][];
 
+    const employees = [];
+
     for (const values of lines) {
       const [lastName, firstName, birthDate, email] = values.map((v) =>
         v.trim(),
@@ -30,6 +32,8 @@ export class BirthdayService {
       const employee = new Employee(firstName, lastName, birthDate, email);
 
       if (employee.isBirthday(xDate)) {
+        employees.push(employee);
+
         const recipient = employee.getEmail();
         const body = `Happy Birthday, dear ${employee.getFirstName()}`;
         const subject = 'Happy Birthday!';
