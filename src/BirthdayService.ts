@@ -14,12 +14,7 @@ export class BirthdayService {
 
     for (const employee of employees) {
       const message = BirthdayGreetingMessage.to(employee);
-
-      await this.sendMessage(message);
+      await this.birthdayGreetSender.send(message);
     }
-  }
-
-  protected async sendMessage(message: BirthdayGreetingMessage): Promise<void> {
-    await this.birthdayGreetSender.send(message);
   }
 }
