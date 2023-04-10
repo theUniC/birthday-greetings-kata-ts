@@ -33,20 +33,22 @@ export class BirthdayService {
 
       if (employee.isBirthday(xDate)) {
         employees.push(employee);
-
-        const recipient = employee.getEmail();
-        const body = `Happy Birthday, dear ${employee.getFirstName()}`;
-        const subject = 'Happy Birthday!';
-
-        await this.sendMessage(
-          smtpHost,
-          smtpPort,
-          'sender@here.com',
-          subject,
-          body,
-          recipient,
-        );
       }
+    }
+
+    for (const employee of employees) {
+      const recipient = employee.getEmail();
+      const body = `Happy Birthday, dear ${employee.getFirstName()}`;
+      const subject = 'Happy Birthday!';
+
+      await this.sendMessage(
+        smtpHost,
+        smtpPort,
+        'sender@here.com',
+        subject,
+        body,
+        recipient,
+      );
     }
   }
 
