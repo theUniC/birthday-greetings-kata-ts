@@ -1,5 +1,4 @@
 import { XDate } from './XDate';
-import * as nodemailer from 'nodemailer';
 import { EmployeeRepository } from './EmployeeRepository';
 import { BirthdayGreetingMessage } from './BirthdayGreetingMessage';
 import { NodemailerBirthdayGreetSender } from './NodemailerBirthdayGreetSender';
