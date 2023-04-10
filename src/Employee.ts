@@ -1,4 +1,4 @@
-import { XDate } from './XDate.js';
+import { XDate } from './XDate';
 
 export class Employee {
   private readonly birthDate: XDate;

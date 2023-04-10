@@ -1,40 +1,20 @@
-import { XDate } from './XDate.js';
-import { parse } from 'csv/sync';
-import { Employee } from './Employee.js';
+import { XDate } from './XDate';
 import * as nodemailer from 'nodemailer';
-import * as fs from 'fs';
+import { CsvEmployeeRepository } from './CsvEmployeeRepository';
 
 export class BirthdayService {
+  constructor(private employeeRepository: CsvEmployeeRepository) {}
+
   async sendGreetings(
     fileName: string,
     xDate: XDate,
     smtpHost: string,
     smtpPort: number,
   ): Promise<void> {
-    const { pathname: root } = new URL(
-      `../resources/${fileName}`,
-      import.meta.url,
+    const employees = this.employeeRepository.employeesWhoseBirthdayIs(
+      fileName,
+      xDate,
     );
-
-    const data = fs.readFileSync(root);
-
-    const lines = parse(data, {
-      delimiter: ',',
-      fromLine: 2,
-    }) as string[][];
-
-    const employees = [];
-
-    for (const values of lines) {
-      const [lastName, firstName, birthDate, email] = values.map((v) =>
-        v.trim(),
-      );
-      const employee = new Employee(firstName, lastName, birthDate, email);
-
-      if (employee.isBirthday(xDate)) {
-        employees.push(employee);
-      }
-    }
 
     for (const employee of employees) {
       const recipient = employee.getEmail();

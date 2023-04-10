@@ -4,10 +4,11 @@ import { XDate } from '../src/XDate.js';
 import * as nodemailer from 'nodemailer';
 import { Transport } from 'nodemailer';
 import MailMessage from 'nodemailer/lib/mailer/mail-message.js';
+import { CsvEmployeeRepository } from '../src/CsvEmployeeRepository';
 
 class TestableBirthdayService extends BirthdayService {
   constructor(private transport: Transport) {
-    super();
+    super(new CsvEmployeeRepository());
   }
 
   protected async sendMessage(
