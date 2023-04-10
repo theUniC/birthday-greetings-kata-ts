@@ -1,6 +1,7 @@
 import { XDate } from './XDate';
 import * as nodemailer from 'nodemailer';
 import { EmployeeRepository } from './EmployeeRepository';
+import { BirthdayGreetingMessage } from './BirthdayGreetingMessage';
 
 export class BirthdayService {
   constructor(private employeeRepository: EmployeeRepository) {}
@@ -13,28 +14,16 @@ export class BirthdayService {
     const employees = this.employeeRepository.employeesWhoseBirthdayIs(xDate);
 
     for (const employee of employees) {
-      const recipient = employee.getEmail();
-      const body = `Happy Birthday, dear ${employee.getFirstName()}`;
-      const subject = 'Happy Birthday!';
+      const message = BirthdayGreetingMessage.to(employee);
 
-      await this.sendMessage(
-        smtpHost,
-        smtpPort,
-        'sender@here.com',
-        subject,
-        body,
-        recipient,
-      );
+      await this.sendMessage(smtpHost, smtpPort, message);
     }
   }
 
   protected async sendMessage(
     smtpHost: string,
     smtpPort: number,
-    sender: string,
-    subject: string,
-    body: string,
-    recipient: string,
+    message: BirthdayGreetingMessage,
   ): Promise<void> {
     const transporter = nodemailer.createTransport({
       host: smtpHost,
@@ -42,10 +31,10 @@ export class BirthdayService {
     });
 
     await transporter.sendMail({
-      from: sender,
-      to: recipient,
-      subject: subject,
-      text: body,
+      from: message.from,
+      to: message.to,
+      subject: message.subject,
+      text: message.body,
     });
   }
 }

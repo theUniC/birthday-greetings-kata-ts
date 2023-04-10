@@ -5,6 +5,7 @@ import * as nodemailer from 'nodemailer';
 import { Transport } from 'nodemailer';
 import MailMessage from 'nodemailer/lib/mailer/mail-message';
 import { CsvEmployeeRepository } from '../src/CsvEmployeeRepository';
+import { BirthdayGreetingMessage } from '../src/BirthdayGreetingMessage';
 
 class TestableBirthdayService extends BirthdayService {
   constructor(private transport: Transport) {
@@ -19,18 +20,15 @@ class TestableBirthdayService extends BirthdayService {
   protected async sendMessage(
     _smtpHost: string,
     _smtpPort: number,
-    sender: string,
-    subject: string,
-    body: string,
-    recipient: string,
+    message: BirthdayGreetingMessage,
   ): Promise<void> {
     const transporter = nodemailer.createTransport(this.transport);
 
     await transporter.sendMail({
-      from: sender,
-      to: recipient,
-      subject: subject,
-      text: body,
+      from: message.from,
+      to: message.to,
+      subject: message.subject,
+      text: message.body,
     });
   }
 }
