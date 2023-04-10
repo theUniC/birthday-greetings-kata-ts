@@ -6,6 +6,7 @@ import { Transport } from 'nodemailer';
 import MailMessage from 'nodemailer/lib/mailer/mail-message';
 import { CsvEmployeeRepository } from '../src/CsvEmployeeRepository';
 import { BirthdayGreetingMessage } from '../src/BirthdayGreetingMessage';
+import { NodemailerBirthdayGreetSender } from '../src/NodemailerBirthdayGreetSender';
 
 class TestableBirthdayService extends BirthdayService {
   constructor(private transport: Transport) {
@@ -14,14 +15,13 @@ class TestableBirthdayService extends BirthdayService {
       import.meta.url,
     );
 
-    super(new CsvEmployeeRepository(root));
+    super(
+      new CsvEmployeeRepository(root),
+      new NodemailerBirthdayGreetSender(nodemailer.createTransport(transport)),
+    );
   }
 
-  protected async sendMessage(
-    _smtpHost: string,
-    _smtpPort: number,
-    message: BirthdayGreetingMessage,
-  ): Promise<void> {
+  protected async sendMessage(message: BirthdayGreetingMessage): Promise<void> {
     const transporter = nodemailer.createTransport(this.transport);
 
     await transporter.sendMail({
@@ -34,7 +34,6 @@ class TestableBirthdayService extends BirthdayService {
 }
 
 describe('BirthdayService', () => {
-  const NONSTANDARD_PORT = 9999;
   let birthdayService: BirthdayService;
   let receivedEmails: MailMessage[] = [];
   const transport: Transport = {
@@ -52,11 +51,7 @@ describe('BirthdayService', () => {
   });
 
   it("will send greetings when it's somebody's birthday", async () => {
-    await birthdayService.sendGreetings(
-      new XDate('2008/10/08'),
-      'localhost',
-      NONSTANDARD_PORT,
-    );
+    await birthdayService.sendGreetings(new XDate('2008/10/08'));
 
     expect(receivedEmails.length).toBe(1);
 
@@ -67,11 +62,7 @@ describe('BirthdayService', () => {
   });
 
   it("will not send email when nobody's birthday", async () => {
-    await birthdayService.sendGreetings(
-      new XDate('2008/01/01'),
-      'localhost',
-      NONSTANDARD_PORT,
-    );
+    await birthdayService.sendGreetings(new XDate('2008/01/01'));
 
     expect(receivedEmails.length).toBe(0);
   });
